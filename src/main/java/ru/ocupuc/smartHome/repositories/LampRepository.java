@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface LampRepository extends JpaRepository<Lamp, Long> {
 
-    List<Lamp> findByScript(Script script);
+
 }

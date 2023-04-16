@@ -1,47 +1,37 @@
 package ru.ocupuc.smartHome.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.ocupuc.smartHome.dto.LampDTO;
 import ru.ocupuc.smartHome.entity.Lamp;
 import ru.ocupuc.smartHome.repositories.LampRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class LampService {
+
     private final LampRepository lampRepository;
 
-    @Autowired
-    public LampService(LampRepository lampRepository) {
-        this.lampRepository = lampRepository;
+    public Lamp create(LampDTO dto){
+             return lampRepository.save(Lamp.builder()
+                .name(dto.getName())
+                .address(dto.getAddress())
+                .build());
     }
 
-    public List getAllLamps() {
+    public List<Lamp> readAll(){
         return lampRepository.findAll();
     }
 
-    public Lamp getLampById(Long id) {
-        return lampRepository.findById(id).orElse(null);
-    }
-
-    public Lamp addLamp(Lamp lamp) {
+    public Lamp update(Lamp lamp){
         return lampRepository.save(lamp);
     }
 
-    public void deleteLamp(Long id) {
+    public void delete(Long id){
         lampRepository.deleteById(id);
     }
 
-    public Lamp updateLamp(Long id, Lamp updatedLamp) {
-        Lamp lamp = lampRepository.findById(id).orElse(null);
-        if (lamp != null) {
-            lamp.setName(updatedLamp.getName());
-            lamp.setAddress(updatedLamp.getAddress());
-            return lampRepository.save(lamp);
-        }
-        return null;
-    }
 
 }

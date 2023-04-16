@@ -1,36 +1,30 @@
 package ru.ocupuc.smartHome.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
-@Table(name = "lamps")
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Lamp {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "address")
     private String address;
 
-    @ManyToMany(mappedBy = "lamps")
-    private List<Script> scripts = new ArrayList<>();
 
-
-
-    public Lamp(String name) {
-        this.name = name;
-    }
 
 }
 

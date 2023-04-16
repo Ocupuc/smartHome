@@ -1,56 +1,39 @@
 package ru.ocupuc.smartHome.controllers;
 
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.ocupuc.smartHome.dto.LampDTO;
 import ru.ocupuc.smartHome.entity.Lamp;
-import ru.ocupuc.smartHome.repositories.LampRepository;
-import lombok.RequiredArgsConstructor;
+import ru.ocupuc.smartHome.services.LampService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/lamps")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class LampController {
-    private final LampRepository lampRepository;
 
-    @GetMapping("")
-    public List<Lamp> getAllLamps() {
-        return lampRepository.findAll();
+    private final LampService lampService;
+
+    @PostMapping
+    public ResponseEntity<Lamp> create(@RequestBody LampDTO dto){
+        return new ResponseEntity<>(lampService.create(dto), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Lamp> getLampById(@PathVariable(value = "id") Long id) {
-        return lampRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping
+    public ResponseEntity<List<Lamp>> readAll(){
+        return new ResponseEntity<>(lampService.readAll(),HttpStatus.OK);
     }
 
-    @PostMapping("")
-    public Lamp createLamp(@Valid @RequestBody Lamp lamp) {
-        return lampRepository.save(lamp);
+    @PutMapping
+    public ResponseEntity<Lamp> update(@RequestBody Lamp lamp){
+        return new ResponseEntity<>(lampService.update(lamp),HttpStatus.OK);
     }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Lamp> updateLamp(@PathVariable(value = "id") Long id, @Valid @RequestBody Lamp lampDetails) {
-        return lampRepository.findById(id)
-                .map(lamp -> {
-                    lamp.setName(lampDetails.getName());
-                    lamp.setAddress(lampDetails.getAddress());
-                    Lamp updatedLamp = lampRepository.save(lamp);
-                    return ResponseEntity.ok(updatedLamp);
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLamp(@PathVariable(value = "id") Long id) {
-        return lampRepository.findById(id)
-                .map(lamp -> {
-                    lampRepository.delete(lamp);
-                    return ResponseEntity.ok().<Void>build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public HttpStatus delete(@PathVariable Long id){
+        lampService.delete(id);
+        return HttpStatus.OK;
     }
+
 }

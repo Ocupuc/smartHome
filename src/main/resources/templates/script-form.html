@@ -17,6 +17,11 @@
     <label for="lamps">Lamps:</label>
     <select multiple name="lamps" id="lamps" th:field="*{lamps}">
         <!-- Add lamps from database here -->
+        <!-- Getting lamps from database using Thymeleaf -->
+        <option th:each="lamp : ${lampList}"
+                th:value="${lamp.id}"
+                th:text="${lamp.name}">
+        </option>
     </select><br><br>
 
     <button type="submit">Save</button>

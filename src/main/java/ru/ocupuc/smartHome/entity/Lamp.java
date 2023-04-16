@@ -1,62 +1,36 @@
 package ru.ocupuc.smartHome.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "lamp")
+@Table(name = "lamps")
+@Data
+@NoArgsConstructor
 public class Lamp {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "address")
     private String address;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "script_id")
-    private Script script;
+    @ManyToMany(mappedBy = "lamps")
+    private List<Script> scripts = new ArrayList<>();
 
-    // конструкторы, геттеры и сеттеры
 
-    public Lamp() {}
 
-    public Lamp(String name, String address) {
-        this.name = name;
-        this.address = address;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public Lamp(String name) {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Script getScript() {
-        return script;
-    }
-
-    public void setScript(Script script) {
-        this.script = script;
-    }
 }
 

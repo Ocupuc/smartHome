@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import ru.ocupuc.smartHome.entity.Lamp;
 import ru.ocupuc.smartHome.repositories.LampRepository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LampService {
@@ -41,4 +43,5 @@ public class LampService {
         }
         return null;
     }
+
 }

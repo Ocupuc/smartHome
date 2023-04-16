@@ -4,19 +4,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.ocupuc.smartHome.entity.Lamp;
 import ru.ocupuc.smartHome.repositories.LampRepository;
+import lombok.RequiredArgsConstructor;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/lamps")
+@RequiredArgsConstructor
 public class LampController {
     private final LampRepository lampRepository;
-
-    public LampController(LampRepository lampRepository) {
-        this.lampRepository = lampRepository;
-    }
 
     @GetMapping("")
     public List<Lamp> getAllLamps() {
@@ -25,12 +22,9 @@ public class LampController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Lamp> getLampById(@PathVariable(value = "id") Long id) {
-        Optional<Lamp> lamp = lampRepository.findById(id);
-        if (lamp.isPresent()) {
-            return ResponseEntity.ok().body(lamp.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return lampRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("")
@@ -40,26 +34,23 @@ public class LampController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Lamp> updateLamp(@PathVariable(value = "id") Long id, @Valid @RequestBody Lamp lampDetails) {
-        Optional<Lamp> optionalLamp = lampRepository.findById(id);
-        if (optionalLamp.isPresent()) {
-            Lamp lamp = optionalLamp.get();
-            lamp.setName(lampDetails.getName());
-            lamp.setAddress(lampDetails.getAddress());
-            Lamp updatedLamp = lampRepository.save(lamp);
-            return ResponseEntity.ok(updatedLamp);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return lampRepository.findById(id)
+                .map(lamp -> {
+                    lamp.setName(lampDetails.getName());
+                    lamp.setAddress(lampDetails.getAddress());
+                    Lamp updatedLamp = lampRepository.save(lamp);
+                    return ResponseEntity.ok(updatedLamp);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Lamp> deleteLamp(@PathVariable(value = "id") Long id) {
-        Optional<Lamp> optionalLamp = lampRepository.findById(id);
-        if (optionalLamp.isPresent()) {
-            lampRepository.deleteById(id);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> deleteLamp(@PathVariable(value = "id") Long id) {
+        return lampRepository.findById(id)
+                .map(lamp -> {
+                    lampRepository.delete(lamp);
+                    return ResponseEntity.ok().<Void>build();
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 }

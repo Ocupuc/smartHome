@@ -11,6 +11,7 @@ import ru.ocupuc.smartHome.services.LampService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/lamps")
 @AllArgsConstructor
 public class LampController {
 
@@ -24,6 +25,11 @@ public class LampController {
     @GetMapping
     public ResponseEntity<List<Lamp>> readAll(){
         return new ResponseEntity<>(lampService.readAll(),HttpStatus.OK);
+    }
+
+    @GetMapping("/script/{id}")
+    public ResponseEntity<List<Lamp>> readByScriptId(@PathVariable Long id){
+        return new ResponseEntity<>(lampService.readByScriptId(id),HttpStatus.OK);
     }
 
     @PutMapping

@@ -14,22 +14,30 @@ public class LampService {
 
     private final LampRepository lampRepository;
 
-    public Lamp create(LampDTO dto){
-             return lampRepository.save(Lamp.builder()
-                .name(dto.getName())
-                .address(dto.getAddress())
-                .build());
+    private final ScriptService scriptService;
+
+    public Lamp create(LampDTO dto) {
+        return lampRepository.save(
+                Lamp.builder()
+                        .name(dto.getName())
+                        .address(dto.getAddress())
+                        .script(scriptService.readById(dto.getScriptId()))
+                        .build());
     }
 
-    public List<Lamp> readAll(){
+    public List<Lamp> readAll() {
         return lampRepository.findAll();
     }
 
-    public Lamp update(Lamp lamp){
+    public List<Lamp> readByScriptId(Long id){
+        return lampRepository.findByScriptId(id);
+    }
+
+    public Lamp update(Lamp lamp) {
         return lampRepository.save(lamp);
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         lampRepository.deleteById(id);
     }
 

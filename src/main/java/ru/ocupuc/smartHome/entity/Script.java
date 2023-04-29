@@ -1,6 +1,10 @@
 package ru.ocupuc.smartHome.entity;
 
-import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Lamp {
+public class Script {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -19,11 +23,5 @@ public class Lamp {
 
     private String name;
 
-    private String address;
-
-    @ManyToOne
-    @JoinColumn(name = "script_id")
-    private Script script;
 
 }
-
